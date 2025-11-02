@@ -413,7 +413,7 @@ export default function PropertiesPage() {
         className="border-t border-border bg-white"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <motion.p variants={itemVariants} className="text-sm text-muted-foreground text-center">
+          <motion.p  className="text-sm text-muted-foreground text-center">
             © 2021 Nestbooking. All rights reserved
           </motion.p>
         </div>
