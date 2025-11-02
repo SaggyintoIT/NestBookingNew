@@ -1,9 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, useInView } from "framer-motion"
-import { easeInOut } from "framer-motion";
-
+import { motion, useInView, easeInOut, Variants } from "framer-motion"
 import { useRef } from "react"
 import Image from "next/image"
 import { MapPin, Calendar, Search } from "lucide-react"
@@ -18,7 +16,7 @@ export default function Hero() {
     setIsVisible(true)
   }, [])
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -29,43 +27,37 @@ export default function Hero() {
     }
   }
 
-  const slideUp = {
+  const slideUp: Variants = {
     hidden: { y: 60, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut"
-      }
-    }
+      transition: { duration: 0.8, ease: easeInOut },
+    },
   }
 
-  const slideInRight = {
+  const slideInRight: Variants = {
     hidden: { x: 60, opacity: 0 },
     visible: {
       x: 0,
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: "easeInOut"
+        ease: easeInOut,
       }
     }
   }
 
-  const scaleIn = {
+  const scaleIn: Variants = {
     hidden: { scale: 0.8, opacity: 0 },
     visible: {
       scale: 1,
       opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut"
-      }
-    }
+      transition: { duration: 0.8, ease: easeInOut },
+    },
   }
 
-  const markerVariants = {
+  const markerVariants: Variants = {
     hidden: { scale: 0, y: -20, opacity: 0 },
     visible: (i: number) => ({
       scale: 1,
@@ -74,9 +66,9 @@ export default function Hero() {
       transition: {
         duration: 0.6,
         delay: i * 0.1,
-        ease: "easeInOut"
-      }
-    })
+        ease: easeInOut,
+      },
+    }),
   }
 
   return (
@@ -88,17 +80,13 @@ export default function Hero() {
       className="relative py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-purple-50 overflow-hidden"
     >
       {/* Enhanced Background with Animation */}
-      <motion.div 
-        className="absolute inset-y-0 right-0 w-full md:w-1/2" 
+      <motion.div
+        className="absolute inset-y-0 right-0 w-full md:w-1/2"
         variants={slideInRight}
+        initial="hidden"
+        animate="visible"
       >
-        <Image
-          src="/map.png"
-          alt="Map background"
-          fill
-          className="object-cover object-center md:object-right opacity-50"
-          priority
-        />
+        <Image src="/map.png" alt="Map" width={500} height={500} />
       </motion.div>
 
       {/* Animated Map Markers */}

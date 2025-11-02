@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { motion, Variants, easeInOut } from "framer-motion"
-import { Heart, MapPin, Bed, Bath, Ruler as Ruler2, ChevronLeft, ChevronRight, Search, DollarSign, Home, X, Calendar } from "lucide-react"
+import { Heart, MapPin, Bed, Bath, Ruler, ChevronLeft, ChevronRight, Search, DollarSign, Home, X, Calendar } from "lucide-react"
 import Header from "@/components/layout/header"
 
 // Animation variants
@@ -91,7 +91,7 @@ const propertiesData = [
 
 export default function PropertiesPage() {
   const [currentPage, setCurrentPage] = useState(1)
-  const [favorites, setFavorites] = useState([])
+  const [favorites, setFavorites] = useState<number[]>([])
   const [isSearchExpanded, setIsSearchExpanded] = useState(false)
   const [isSearchSticky, setIsSearchSticky] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -99,10 +99,10 @@ export default function PropertiesPage() {
   const [isSearchVisible, setIsSearchVisible] = useState(false)
   const [isGridVisible, setIsGridVisible] = useState(false)
 
-  const searchBarRef = useRef(null)
-  const headerRef = useRef(null)
-  const searchSectionRef = useRef(null)
-  const gridRef = useRef(null)
+  const searchBarRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const searchSectionRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
 
   const itemsPerPage = 6
   const totalPages = Math.ceil(propertiesData.length / itemsPerPage)
@@ -135,8 +135,8 @@ export default function PropertiesPage() {
 
   // Close search when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
         setIsSearchExpanded(false)
       }
     }
@@ -211,7 +211,7 @@ export default function PropertiesPage() {
     }
   }, [])
 
-  const toggleFavorite = (id) => {
+  const toggleFavorite = (id: number) => {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((fav) => fav !== id) : [...prev, id]))
   }
 
@@ -225,7 +225,7 @@ export default function PropertiesPage() {
     }
   }
 
-  const searchBarVariants = {
+  const searchBarVariants: Variants = {
     collapsed: {
       scale: isSearchSticky ? 0.95 : 1,
       y: isSearchSticky ? 10 : 0,
@@ -631,7 +631,7 @@ export default function PropertiesPage() {
                         {property.baths} Baths
                       </div>
                       <div className="flex items-center gap-1">
-                        <Ruler2 size={16} />
+                        <Ruler size={16} />
                         {property.sqft} sqft
                       </div>
                     </div>

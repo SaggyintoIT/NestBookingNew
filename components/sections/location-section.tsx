@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, useInView, AnimatePresence } from "framer-motion"
+import { motion, useInView, AnimatePresence, easeInOut, Variants } from "framer-motion"
 import { useRef } from "react"
 import Image from "next/image"
 import { Heart, Search, MapPin, Calendar, DollarSign, Home, X } from "lucide-react"
@@ -282,7 +282,7 @@ export default function LocationSection() {
     }
   }, [isSearchExpanded])
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -293,31 +293,31 @@ export default function LocationSection() {
     }
   }
 
-  const staggerItem = {
+  const staggerItem: Variants = {
     hidden: { y: 40, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: "easeInOut"
+        ease: easeInOut
       }
     }
   }
 
-  const slideUp = {
+  const slideUp: Variants = {
     hidden: { y: 40, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.7,
-        ease: "easeInOut"
-      }
-    }
+        duration: 0.8,
+        ease: easeInOut,
+      },
+    },
   }
 
-  const loadMoreVariants = {
+  const loadMoreVariants: Variants = {
     hidden: { 
       y: 20, 
       opacity: 0,
@@ -329,12 +329,12 @@ export default function LocationSection() {
       scale: 1,
       transition: {
         duration: 0.8,
-        ease: "easeInOut"
+        ease: easeInOut
       }
     }
   }
 
-  const searchBarVariants = {
+  const searchBarVariants: Variants = {
     collapsed: {
       scale: isSearchSticky ? 0.95 : 1,
       y: isSearchSticky ? 10 : 0,
