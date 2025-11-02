@@ -21,38 +21,39 @@ const banks = [
   {
     id: 4,
     name: "Axis Bank",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Axis_Bank_logo.svg/200px-Axis_Bank_logo.svg.png"
+    logo: "https://e7.pngegg.com/pngimages/510/187/png-clipart-axis-bank-logo-horizontal-bank-logos.png"
   },
   {
     id: 5,
     name: "Punjab National Bank",
-    logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Punjab_National_Bank_logo.svg/200px-Punjab_National_Bank_logo.svg.png"
+    logo: "https://static.vecteezy.com/system/resources/previews/020/336/469/non_2x/punjab-national-bank-pnb-bank-logo-free-free-vector.jpg"
   },
   {
     id: 6,
     name: "Bank of Baroda",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Bank_of_Baroda_logo.svg/200px-Bank_of_Baroda_logo.svg.png"
+    logo: "https://1000logos.net/wp-content/uploads/2021/06/Bank-of-Baroda-logo.jpg"
   },
   {
     id: 7,
     name: "Kotak Mahindra Bank",
-    logo: "https://upload.wikimedia.org/wikipedia/en/thumb/9/90/Kotak_Mahindra_Bank_logo.svg/200px-Kotak_Mahindra_Bank_logo.svg.png"
+    logo: "https://e7.pngegg.com/pngimages/333/464/png-clipart-kotak-mahindra-bank-logo-horizontal-bank-logos-thumbnail.png"
   },
   {
     id: 8,
     name: "IndusInd Bank",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/IndusInd_Bank_Logo.svg/200px-IndusInd_Bank_Logo.svg.png"
+    logo: "https://i.pinimg.com/736x/01/28/25/0128254f4655e5936c8726883f71a212.jpg"
   },
   {
     id: 9,
     name: "Yes Bank",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Yes_Bank_SVG_Logo.svg/200px-Yes_Bank_SVG_Logo.svg.png"
+    logo: "https://1000logos.net/wp-content/uploads/2021/06/Bank-of-Baroda-logo.jpg"
   },
   {
     id: 10,
     name: "Canara Bank",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Canara_Bank_logo.svg/200px-Canara_Bank_logo.svg.png"
-  }
+    logo: "https://e7.pngegg.com/pngimages/333/464/png-clipart-kotak-mahindra-bank-logo-horizontal-bank-logos-thumbnail.png"
+  },
+  
 ]
 
 export default function SponsoredBanks() {

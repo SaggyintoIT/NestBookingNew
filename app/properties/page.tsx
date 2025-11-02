@@ -2,12 +2,11 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import { motion, Variants, easeOut} from "framer-motion"
+import { motion, Variants, easeOut } from "framer-motion"
 import { Heart, MapPin, Bed, Bath, Ruler as Ruler2, ChevronLeft, ChevronRight, Search, DollarSign, Home, X, Calendar } from "lucide-react"
 import Header from "@/components/layout/header"
 
-
-// Animation variants (added)
+// Animation variants
 const slideInUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: {
@@ -15,7 +14,7 @@ const slideInUp: Variants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: easeOut, // ✅ imported easing constant, not string
+      ease: easeOut,
     },
   },
 }
@@ -95,12 +94,12 @@ export default function PropertiesPage() {
   const [favorites, setFavorites] = useState([])
   const [isSearchExpanded, setIsSearchExpanded] = useState(false)
   const [isSearchSticky, setIsSearchSticky] = useState(false)
+  const [lastScrollY, setLastScrollY] = useState(0)
   const [isHeaderVisible, setIsHeaderVisible] = useState(false)
   const [isSearchVisible, setIsSearchVisible] = useState(false)
   const [isGridVisible, setIsGridVisible] = useState(false)
 
   const searchBarRef = useRef(null)
-  const sectionRef = useRef(null)
   const headerRef = useRef(null)
   const searchSectionRef = useRef(null)
   const gridRef = useRef(null)
@@ -109,6 +108,47 @@ export default function PropertiesPage() {
   const totalPages = Math.ceil(propertiesData.length / itemsPerPage)
   const startIdx = (currentPage - 1) * itemsPerPage
   const displayedProperties = propertiesData.slice(startIdx, startIdx + itemsPerPage)
+
+  // Handle scroll effect for search bar contraction/expansion
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      const scrollDirection = scrollTop > lastScrollY ? 'down' : 'up'
+      
+      // Contract search bar when scrolling down, expand when scrolling up
+      if (scrollDirection === 'down' && scrollTop > 100 && isSearchExpanded) {
+        setIsSearchExpanded(false)
+      }
+      
+      setLastScrollY(scrollTop)
+      
+      // Make search bar sticky when scrolled past it
+      if (searchBarRef.current) {
+        const searchBarRect = searchBarRef.current.getBoundingClientRect()
+        setIsSearchSticky(searchBarRect.top <= 20)
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [lastScrollY, isSearchExpanded])
+
+  // Close search when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
+        setIsSearchExpanded(false)
+      }
+    }
+
+    if (isSearchExpanded) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isSearchExpanded])
 
   useEffect(() => {
     const observers = []
@@ -175,9 +215,34 @@ export default function PropertiesPage() {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((fav) => fav !== id) : [...prev, id]))
   }
 
+  const handleSearchToggle = () => {
+    setIsSearchExpanded(!isSearchExpanded)
+    if (!isSearchExpanded) {
+      // Scroll to search bar when expanding
+      setTimeout(() => {
+        searchBarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 100)
+    }
+  }
+
+  const searchBarVariants = {
+    collapsed: {
+      scale: isSearchSticky ? 0.95 : 1,
+      y: isSearchSticky ? 10 : 0,
+      borderRadius: isSearchSticky ? "16px" : "12px",
+      boxShadow: isSearchSticky ? "0 4px 20px rgba(0,0,0,0.15)" : "0 2px 8px rgba(0,0,0,0.1)",
+    },
+    expanded: {
+      scale: 1,
+      y: 0,
+      borderRadius: "24px",
+      boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+    }
+  }
+
   return (
     <div className="min-h-screen bg-purple-50">
-     <Header/>
+      <Header/>
     
       {/* Search Section */}
       <section 
@@ -189,115 +254,325 @@ export default function PropertiesPage() {
         }}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div
+          {/* Enhanced Search Bar */}
+          <motion.div
             ref={searchBarRef}
-            className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300"
+            className={`mb-8 transition-all duration-300 ${
+              isSearchSticky ? 'sticky top-4 z-50' : 'relative'
+            }`}
           >
-            {!isSearchExpanded ? (
-              <div className="flex flex-col lg:flex-row gap-4">
-                <button
-                  onClick={() => setIsSearchExpanded(true)}
-                  className="flex-1 p-4 text-left hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-200 hover:border-purple-300"
-                >
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-purple-600" />
+            <motion.div
+              className={`bg-white transition-all duration-500 ${
+                isSearchSticky ? 'mx-auto max-w-4xl' : 'max-w-6xl mx-auto'
+              }`}
+              variants={searchBarVariants}
+              initial="collapsed"
+              animate={isSearchExpanded ? "expanded" : "collapsed"}
+              whileHover={!isSearchExpanded ? { scale: 1.02 } : {}}
+            >
+              {/* Collapsed Search Bar */}
+              {!isSearchExpanded ? (
+                <div className="p-2">
+                  <div className={`flex items-center gap-2 ${isSearchSticky ? 'flex-row' : 'flex-col lg:flex-row'}`}>
+                    {/* Compact Sticky Version */}
+                    {isSearchSticky ? (
+                      <>
+                        {/* Location - Compact */}
+                        <motion.div
+                          className="flex-1"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        >
+                          <button
+                            onClick={handleSearchToggle}
+                            className="w-full p-3 text-left hover:bg-gray-50 rounded-lg transition-all duration-300 group border border-transparent hover:border-gray-200"
+                          >
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-4 w-4 text-purple-600" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">Location</p>
+                                <p className="text-xs text-gray-500">New York, USA</p>
+                              </div>
+                            </div>
+                          </button>
+                        </motion.div>
+
+                        {/* When - Compact */}
+                        <motion.div
+                          className="flex-1"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        >
+                          <button
+                            onClick={handleSearchToggle}
+                            className="w-full p-3 text-left hover:bg-gray-50 rounded-lg transition-all duration-300 group border border-transparent hover:border-gray-200"
+                          >
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-blue-600" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">When</p>
+                                <p className="text-xs text-gray-500">Select Move-in Date</p>
+                              </div>
+                            </div>
+                          </button>
+                        </motion.div>
+
+                        {/* Price - Compact */}
+                        <motion.div
+                          className="flex-1"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        >
+                          <button
+                            onClick={handleSearchToggle}
+                            className="w-full p-3 text-left hover:bg-gray-50 rounded-lg transition-all duration-300 group border border-transparent hover:border-gray-200"
+                          >
+                            <div className="flex items-center gap-2">
+                              <DollarSign className="h-4 w-4 text-green-600" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">Price</p>
+                                <p className="text-xs text-gray-500">$500-$2,500</p>
+                              </div>
+                            </div>
+                          </button>
+                        </motion.div>
+
+                        {/* Property Type - Compact */}
+                        <motion.div
+                          className="flex-1"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        >
+                          <button
+                            onClick={handleSearchToggle}
+                            className="w-full p-3 text-left hover:bg-gray-50 rounded-lg transition-all duration-300 group border border-transparent hover:border-gray-200"
+                          >
+                            <div className="flex items-center gap-2">
+                              <Home className="h-4 w-4 text-orange-600" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">Property Type</p>
+                                <p className="text-xs text-gray-500">Houses</p>
+                              </div>
+                            </div>
+                          </button>
+                        </motion.div>
+
+                        {/* Search Button - Compact */}
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={handleSearchToggle}
+                          className="p-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                          <Search className="h-4 w-4" />
+                        </motion.button>
+                      </>
+                    ) : (
+                      /* Full Expanded Version (when not sticky) */
+                      <>
+                        {/* Location Search */}
+                        <motion.div
+                          className="flex-1 w-full"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        >
+                          <button
+                            onClick={handleSearchToggle}
+                            className="w-full p-4 text-left hover:bg-gray-50 rounded-xl transition-all duration-300 group border border-transparent hover:border-gray-200"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors duration-300">
+                                <MapPin className="h-4 w-4 text-purple-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">Location</p>
+                                <p className="text-sm text-gray-500">New York, USA</p>
+                              </div>
+                            </div>
+                          </button>
+                        </motion.div>
+
+                        {/* When */}
+                        <motion.div
+                          className="flex-1 w-full"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        >
+                          <button
+                            onClick={handleSearchToggle}
+                            className="w-full p-4 text-left hover:bg-gray-50 rounded-xl transition-all duration-300 group border border-transparent hover:border-gray-200"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors duration-300">
+                                <Calendar className="h-4 w-4 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">When</p>
+                                <p className="text-sm text-gray-500">Select Move-in Date</p>
+                              </div>
+                            </div>
+                          </button>
+                        </motion.div>
+
+                        {/* Price */}
+                        <motion.div
+                          className="flex-1 w-full"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        >
+                          <button
+                            onClick={handleSearchToggle}
+                            className="w-full p-4 text-left hover:bg-gray-50 rounded-xl transition-all duration-300 group border border-transparent hover:border-gray-200"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors duration-300">
+                                <DollarSign className="h-4 w-4 text-green-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">Price</p>
+                                <p className="text-sm text-gray-500">$500-$2,500</p>
+                              </div>
+                            </div>
+                          </button>
+                        </motion.div>
+
+                        {/* Property Type */}
+                        <motion.div
+                          className="flex-1 w-full"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        >
+                          <button
+                            onClick={handleSearchToggle}
+                            className="w-full p-4 text-left hover:bg-gray-50 rounded-xl transition-all duration-300 group border border-transparent hover:border-gray-200"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-orange-100 rounded-lg group-hover:bg-orange-200 transition-colors duration-300">
+                                <Home className="h-4 w-4 text-orange-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">Property Type</p>
+                                <p className="text-sm text-gray-500">Houses</p>
+                              </div>
+                            </div>
+                          </button>
+                        </motion.div>
+
+                        {/* Search Button */}
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={handleSearchToggle}
+                          className="p-4 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                          <Search className="h-5 w-5" />
+                        </motion.button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                /* Expanded Search Bar */
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900">Search properties</h3>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setIsSearchExpanded(false)}
+                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    >
+                      <X className="h-5 w-5" />
+                    </motion.button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    {/* Location Input */}
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Location</p>
-                      <p className="text-sm text-gray-500">New York, USA</p>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-purple-600" />
+                          Location
+                        </div>
+                      </label>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <input
+                          type="text"
+                          placeholder="New York, USA"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          autoFocus
+                        />
+                      </div>
+                    </div>
+
+                    {/* When - Move-in Date */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-blue-600" />
+                          When
+                        </div>
+                      </label>
+                      <input
+                        type="date"
+                        placeholder="Select Move-in Date"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    {/* Price Range */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="h-4 w-4 text-green-600" />
+                          Price Range
+                        </div>
+                      </label>
+                      <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <option value="$500-$2,500">$500 - $2,500</option>
+                        <option value="$2,500-$5,000">$2,500 - $5,000</option>
+                        <option value="$5,000-$10,000">$5,000 - $10,000</option>
+                        <option value="$10,000+">$10,000+</option>
+                      </select>
+                    </div>
+
+                    {/* Property Type */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <Home className="h-4 w-4 text-orange-600" />
+                          Property Type
+                        </div>
+                      </label>
+                      <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <option value="houses">Houses</option>
+                        <option value="apartments">Apartments</option>
+                        <option value="condos">Condos</option>
+                        <option value="townhouses">Townhouses</option>
+                        <option value="villas">Villas</option>
+                      </select>
                     </div>
                   </div>
-                </button>
 
-                <button
-                  onClick={() => setIsSearchExpanded(true)}
-                  className="flex-1 p-4 text-left hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-200 hover:border-purple-300"
-                >
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">When</p>
-                      <p className="text-sm text-gray-500">Select Move-in Date</p>
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => setIsSearchExpanded(true)}
-                  className="flex-1 p-4 text-left hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-200 hover:border-purple-300"
-                >
-                  <div className="flex items-center gap-3">
-                    <DollarSign className="h-5 w-5 text-green-600" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Price</p>
-                      <p className="text-sm text-gray-500">$500-$2,500</p>
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  className="p-4 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-                >
-                  <Search className="h-5 w-5" />
-                </button>
-              </div>
-            ) : (
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Search properties</h3>
-                  <button
-                    onClick={() => setIsSearchExpanded(false)}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                    <input
-                      type="text"
-                      placeholder="New York, USA"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">When</label>
-                    <input
-                      type="date"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
-                    <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                      <option>$500 - $2,500</option>
-                      <option>$2,500 - $5,000</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
-                    <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                      <option>Houses</option>
-                      <option>Apartments</option>
-                    </select>
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => setIsSearchExpanded(false)}
+                      className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium flex items-center gap-2"
+                    >
+                      <Search className="h-4 w-4" />
+                      Search
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={() => setIsSearchExpanded(false)}
-                    className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                  >
-                    Cancel
-                  </button>
-                  <button className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium">
-                    Search
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -405,15 +680,16 @@ export default function PropertiesPage() {
           </div>
         </div>
       </section>
-            <motion.div
+
+      <motion.div
         variants={slideInUp}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="border-t border-border bg-white"
+        className="border-t border-gray-200 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <motion.p  className="text-sm text-muted-foreground text-center">
+          <motion.p className="text-sm text-gray-500 text-center">
             © 2021 Nestbooking. All rights reserved
           </motion.p>
         </div>

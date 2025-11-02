@@ -17,18 +17,16 @@ export default function Header() {
         <div className="flex justify-between items-center h-16 relative">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 flex items-center justify-center">
+            <div className="w-34 h-8 flex items-center justify-center">
               <Image
-                src="/logo1.png"
+                src="/Nest.png"
                 alt="Logo"
-                width={40}
+                width={180}
                 height={40}
                 className="object-contain"
               />
             </div>
-            <span className="font-bold text-lg text-gray-900 hidden sm:inline">
-              Nestbooking
-            </span>
+            
           </Link>
 
           {/* Desktop Navigation */}
@@ -52,7 +50,7 @@ export default function Header() {
               Hire Broker
             </Link>
             <Link
-              href="#"
+              href="/properties"
               className="text-gray-900 font-semibold hover:text-purple-600 transition"
             >
               Wall

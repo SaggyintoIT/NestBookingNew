@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion, useInView } from "framer-motion"
+import { easeInOut } from "framer-motion";
+
 import { useRef } from "react"
 import Image from "next/image"
 import { MapPin, Calendar, Search } from "lucide-react"
@@ -46,7 +48,7 @@ export default function Hero() {
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: "easeOut"
+        ease: "easeInOut"
       }
     }
   }

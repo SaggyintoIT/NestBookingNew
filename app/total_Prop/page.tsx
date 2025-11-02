@@ -163,7 +163,7 @@ export default function DashboardPage() {
                 Manage Properties
               </button>
               </Link>
-              <Link href="/total_Prop" passHref>
+              <Link href="/properties" passHref>
                 <button className="text-gray-700 hover:text-gray-900 transition font-semibold text-base whitespace-nowrap">
                   Claim your Properties
                 </button>
