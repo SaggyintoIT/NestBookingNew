@@ -300,7 +300,7 @@ export default function LocationSection() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeInOut"
       }
     }
   }
@@ -312,7 +312,7 @@ export default function LocationSection() {
       opacity: 1,
       transition: {
         duration: 0.7,
-        ease: "easeOut"
+        ease: "easeInOut"
       }
     }
   }
@@ -329,7 +329,7 @@ export default function LocationSection() {
       scale: 1,
       transition: {
         duration: 0.8,
-        ease: "easeOut"
+        ease: "easeInOut"
       }
     }
   }

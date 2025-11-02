@@ -102,7 +102,7 @@ export default function SponsoredSection() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeInOut"
       }
     }
   }
@@ -114,7 +114,7 @@ export default function SponsoredSection() {
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
+        ease: "easeInOut"
       }
     }
   }

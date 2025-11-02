@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView, easeOut } from "framer-motion";
+import { motion, useInView, easeInOut } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -28,7 +28,7 @@ export default function Footer() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: easeOut, // ✅ fixed
+        ease: easeInOut, // ✅ fixed
       },
     },
   };
@@ -40,7 +40,7 @@ export default function Footer() {
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: easeOut, // ✅ fixed
+        ease: easeInOut, // ✅ fixed
       },
     },
   };
@@ -52,7 +52,7 @@ export default function Footer() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: easeOut, // ✅ fixed
+        ease: easeInOut, // ✅ fixed
       },
     },
   };

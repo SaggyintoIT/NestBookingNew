@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import { motion, Variants, easeOut } from "framer-motion"
+import { motion, Variants, easeInOut } from "framer-motion"
 import { Heart, MapPin, Bed, Bath, Ruler as Ruler2, ChevronLeft, ChevronRight, Search, DollarSign, Home, X, Calendar } from "lucide-react"
 import Header from "@/components/layout/header"
 
@@ -14,7 +14,7 @@ const slideInUp: Variants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: easeOut,
+      ease: easeInOut,
     },
   },
 }
