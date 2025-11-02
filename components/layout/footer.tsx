@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import Link from "next/link"
+import { easeOut } from "framer-motion";
 import Image from "next/image"
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react"
 
@@ -28,7 +29,7 @@ export default function Footer() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        transition: { duration: 0.6, ease: "easeOut" },
       }
     }
   }
