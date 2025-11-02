@@ -1,15 +1,14 @@
-"use client"
+"use client";
 
-import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
-import Link from "next/link"
-import { easeOut } from "framer-motion";
-import Image from "next/image"
-import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react"
+import { motion, useInView, easeOut } from "framer-motion";
+import { useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 
 export default function Footer() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -17,10 +16,10 @@ export default function Footer() {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  }
+        delayChildren: 0.2,
+      },
+    },
+  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -29,10 +28,10 @@ export default function Footer() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        transition: { duration: 0.6, ease: "easeOut" },
-      }
-    }
-  }
+        ease: easeOut, // ✅ fixed
+      },
+    },
+  };
 
   const slideInLeft = {
     hidden: { x: -20, opacity: 0 },
@@ -41,10 +40,10 @@ export default function Footer() {
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  }
+        ease: easeOut, // ✅ fixed
+      },
+    },
+  };
 
   const slideInUp = {
     hidden: { y: 20, opacity: 0 },
@@ -53,10 +52,10 @@ export default function Footer() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  }
+        ease: easeOut, // ✅ fixed
+      },
+    },
+  };
 
   return (
     <motion.footer
@@ -83,13 +82,12 @@ export default function Footer() {
           <motion.div variants={itemVariants}>
             <h4 className="font-bold text-primary text-sm mb-4">SELL A HOME</h4>
             <ul className="space-y-3 text-sm">
-              {['Request an offer', 'Pricing', 'Reviews', 'Stories'].map((item, index) => (
-                <motion.li 
-                  key={item}
-                  variants={slideInLeft}
-                  custom={index}
-                >
-                  <Link href="#" className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block">
+              {["Request an offer", "Pricing", "Reviews", "Stories"].map((item, index) => (
+                <motion.li key={item} variants={slideInLeft} custom={index}>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block"
+                  >
                     {item}
                   </Link>
                 </motion.li>
@@ -101,13 +99,12 @@ export default function Footer() {
           <motion.div variants={itemVariants}>
             <h4 className="font-bold text-primary text-sm mb-4">BUY A HOME</h4>
             <ul className="space-y-3 text-sm">
-              {['Buy', 'Finance'].map((item, index) => (
-                <motion.li 
-                  key={item}
-                  variants={slideInLeft}
-                  custom={index}
-                >
-                  <Link href="#" className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block">
+              {["Buy", "Finance"].map((item, index) => (
+                <motion.li key={item} variants={slideInLeft} custom={index}>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block"
+                  >
                     {item}
                   </Link>
                 </motion.li>
@@ -119,13 +116,12 @@ export default function Footer() {
           <motion.div variants={itemVariants}>
             <h4 className="font-bold text-primary text-sm mb-4">BUY, RENT AND SELL</h4>
             <ul className="space-y-3 text-sm">
-              {['Buy and sell properties', 'Rent home', 'Builder trade-up'].map((item, index) => (
-                <motion.li 
-                  key={item}
-                  variants={slideInLeft}
-                  custom={index}
-                >
-                  <Link href="#" className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block">
+              {["Buy and sell properties", "Rent home", "Builder trade-up"].map((item, index) => (
+                <motion.li key={item} variants={slideInLeft} custom={index}>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block"
+                  >
                     {item}
                   </Link>
                 </motion.li>
@@ -137,13 +133,12 @@ export default function Footer() {
           <motion.div variants={itemVariants}>
             <h4 className="font-bold text-primary text-sm mb-4">ABOUT</h4>
             <ul className="space-y-3 text-sm">
-              {['Company', 'How it works', 'Contact', 'Investors'].map((item, index) => (
-                <motion.li 
-                  key={item}
-                  variants={slideInLeft}
-                  custom={index}
-                >
-                  <Link href="#" className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block">
+              {["Company", "How it works", "Contact", "Investors"].map((item, index) => (
+                <motion.li key={item} variants={slideInLeft} custom={index}>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block"
+                  >
                     {item}
                   </Link>
                 </motion.li>
@@ -160,13 +155,12 @@ export default function Footer() {
           <motion.div variants={itemVariants}>
             <h4 className="font-bold text-primary text-sm mb-4">TERMS & PRIVACY</h4>
             <ul className="space-y-3 text-sm">
-              {['Trust & Safety', 'Terms of Service', 'Privacy Policy'].map((item, index) => (
-                <motion.li 
-                  key={item}
-                  variants={slideInLeft}
-                  custom={index}
-                >
-                  <Link href="#" className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block">
+              {["Trust & Safety", "Terms of Service", "Privacy Policy"].map((item, index) => (
+                <motion.li key={item} variants={slideInLeft} custom={index}>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block"
+                  >
                     {item}
                   </Link>
                 </motion.li>
@@ -180,13 +174,12 @@ export default function Footer() {
           <motion.div variants={itemVariants}>
             <h4 className="font-bold text-primary text-sm mb-4">RESOURCES</h4>
             <ul className="space-y-3 text-sm">
-              {['Blog', 'Guides', 'FAQ', 'Help Center'].map((item, index) => (
-                <motion.li 
-                  key={item}
-                  variants={slideInLeft}
-                  custom={index}
-                >
-                  <Link href="#" className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block">
+              {["Blog", "Guides", "FAQ", "Help Center"].map((item, index) => (
+                <motion.li key={item} variants={slideInLeft} custom={index}>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1 block"
+                  >
                     {item}
                   </Link>
                 </motion.li>
@@ -194,30 +187,18 @@ export default function Footer() {
             </ul>
           </motion.div>
         </div>
-
-
       </div>
 
       {/* Bottom Footer */}
-      <motion.div 
-        variants={slideInUp}
-        className="border-t border-border bg-white"
-      >
+      <motion.div variants={slideInUp} className="border-t border-border bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <motion.p 
-              variants={itemVariants}
-              className="text-sm text-muted-foreground"
-            >
+            <motion.p variants={itemVariants} className="text-sm text-muted-foreground">
               © 2021 Nestbooking. All rights reserved
             </motion.p>
             <div className="flex gap-4">
               {[Facebook, Instagram, Twitter, Linkedin].map((Icon, index) => (
-                <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  custom={index}
-                >
+                <motion.div key={index} variants={itemVariants} custom={index}>
                   <Link
                     href="#"
                     className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110 block"
@@ -231,5 +212,5 @@ export default function Footer() {
         </div>
       </motion.div>
     </motion.footer>
-  )
+  );
 }
