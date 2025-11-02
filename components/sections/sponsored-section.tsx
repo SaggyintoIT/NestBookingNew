@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { motion, useInView, easeInOut, Variants } from "framer-motion"
 import { useRef } from "react"
 import Image from "next/image"
 import { Heart, Bed, Bath, Maximize2 } from "lucide-react"
@@ -84,7 +84,7 @@ export default function SponsoredSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-50px" })
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -95,26 +95,26 @@ export default function SponsoredSection() {
     }
   }
 
-  const slideUp = {
+  const slideUp: Variants = {
     hidden: { y: 40, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: "easeInOut"
+        ease: easeInOut
       }
     }
   }
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: "easeInOut"
+        ease: easeInOut
       }
     }
   }
